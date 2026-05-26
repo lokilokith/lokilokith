@@ -6,7 +6,7 @@
 
 **`SOC ANALYST`** · **`THREAT DETECTION`** · **`SIEM ENGINEERING`** · **`SYSMON`**
 
-[![Portfolio](https://img.shields.io/badge/◈_View_Interactive_Portfolio-1D9E75?style=for-the-badge&logoColor=white)](https://lokilokith.github.io)
+[![View Interactive Portfolio](https://img.shields.io/badge/◈_Interactive_Portfolio-1D9E75?style=for-the-badge&logoColor=white)](https://lokilokith.github.io/lokilokith/)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lokith-a8288a30a/)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:lokilokith123@gmail.com)
 

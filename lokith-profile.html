@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lokith · SOC Analyst</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Syne:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;
+  --bg2:#161b22;
+  --bg3:#21262d;
+  --border:#30363d;
+  --border2:#21262d;
+  --text:#e6edf3;
+  --muted:#8b949e;
+  --dim:#484f58;
+  --green:#1D9E75;
+  --green2:#0F6E56;
+  --green-bg:rgba(29,158,117,0.1);
+  --green-border:rgba(29,158,117,0.3);
+  --amber:#EF9F27;
+  --coral:#D85A30;
+  --mono:'IBM Plex Mono',monospace;
+  --display:'Syne',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--mono);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* Nav */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,17,23,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border2);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:52px}
+.nav-logo{font-family:var(--display);font-size:18px;font-weight:800;color:var(--text);text-decoration:none}
+.nav-logo span{color:var(--green)}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:12px;letter-spacing:.08em;transition:color .2s}
+.nav-links a:hover{color:var(--green)}
+.nav-dot{width:7px;height:7px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;margin-left:1rem}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:6rem 2rem 4rem;max-width:900px;margin:0 auto;position:relative}
+.hero-prompt{font-size:12px;color:var(--green);letter-spacing:.1em;margin-bottom:1.5rem;opacity:.8}
+.hero-prompt::before{content:'$ ';color:var(--dim)}
+.hero-name{font-family:var(--display);font-size:clamp(56px,10vw,100px);font-weight:800;letter-spacing:-3px;line-height:.95;margin-bottom:1.5rem;color:var(--text)}
+.hero-name span{color:var(--green)}
+.hero-roles{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:2rem}
+.role-tag{font-size:11px;letter-spacing:.12em;padding:4px 12px;border:1px solid var(--border);border-radius:3px;color:var(--muted)}
+.hero-bio{font-size:13px;line-height:1.8;color:var(--muted);border-left:2px solid var(--green);padding-left:1.25rem;max-width:600px;margin-bottom:2rem}
+.hero-bio strong{color:var(--text);font-weight:500}
+.status-pill{display:inline-flex;align-items:center;gap:8px;font-size:11px;background:var(--green-bg);border:1px solid var(--green-border);border-radius:4px;padding:6px 14px;color:var(--green);letter-spacing:.06em}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;flex-shrink:0}
+.hero-scroll{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--dim);font-size:11px;letter-spacing:.1em;animation:bounce 2s infinite}
+.hero-scroll svg{width:16px;height:16px;stroke:var(--dim)}
+
+/* Sections */
+section{padding:5rem 2rem;max-width:900px;margin:0 auto}
+.section-label{font-size:11px;letter-spacing:.18em;color:var(--dim);margin-bottom:2rem;display:flex;align-items:center;gap:1rem}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border2)}
+
+/* Focus Grid */
+.focus-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1px;background:var(--border2);border:1px solid var(--border2);border-radius:10px;overflow:hidden}
+.focus-card{background:var(--bg2);padding:1.25rem 1.5rem;transition:background .2s;cursor:default}
+.focus-card:hover{background:var(--bg3)}
+.focus-card:hover .fc-icon{color:var(--green)}
+.fc-icon{font-size:20px;color:var(--dim);margin-bottom:.75rem;transition:color .3s}
+.fc-title{font-size:13px;font-weight:500;color:var(--text);margin-bottom:.25rem}
+.fc-sub{font-size:11px;color:var(--muted);line-height:1.5}
+
+/* Philosophy */
+.philosophy-terminal{background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.pt-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.25rem;border-bottom:1px solid var(--border);background:var(--bg3)}
+.pt-dots{display:flex;gap:6px}
+.pt-dot{width:10px;height:10px;border-radius:50%}
+.pt-title{font-size:11px;color:var(--dim);letter-spacing:.08em}
+.pt-body{padding:1.5rem;display:grid;grid-template-columns:1fr auto 1fr;gap:1.5rem;align-items:start}
+.pt-col-label{font-size:10px;letter-spacing:.12em;color:var(--dim);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border2)}
+.pt-col-items{display:flex;flex-direction:column;gap:.5rem}
+.pt-item{font-size:12px;line-height:1.5}
+.pt-item.skip{color:var(--dim);text-decoration:line-through}
+.pt-item.build{color:var(--green)}
+.pt-divider{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.5rem;padding-top:1.5rem}
+.pt-arrow{font-size:18px;color:var(--border);animation:arrow-pulse 2s infinite}
+
+/* Projects */
+.project-card{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:1rem;transition:border-color .2s}
+.project-card:hover{border-color:var(--green-border)}
+.pc-head{padding:1.25rem 1.5rem;background:var(--bg2);display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+.pc-head-left{display:flex;align-items:center;gap:1rem}
+.pc-accent{width:3px;height:24px;border-radius:2px;background:var(--green);flex-shrink:0}
+.pc-accent.amber{background:var(--amber)}
+.pc-name{font-size:15px;font-weight:500;color:var(--text)}
+.pc-tags{display:flex;gap:6px}
+.pc-tag{font-size:10px;padding:2px 8px;border-radius:3px;letter-spacing:.06em}
+.pc-tag.green{background:var(--green-bg);color:var(--green);border:1px solid var(--green-border)}
+.pc-tag.amber{background:rgba(239,159,39,.1);color:var(--amber);border:1px solid rgba(239,159,39,.3)}
+.pc-chevron{color:var(--dim);font-size:18px;transition:transform .3s;line-height:1}
+.pc-chevron.open{transform:rotate(180deg)}
+.pc-body{overflow:hidden;max-height:0;transition:max-height .35s ease}
+.pc-body.open{max-height:600px}
+.pc-inner{padding:1.5rem;background:var(--bg);border-top:1px solid var(--border2)}
+.pc-desc{font-size:12px;line-height:1.8;color:var(--muted);margin-bottom:1.25rem;padding-left:1rem;border-left:2px solid var(--green-border)}
+.pc-features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.pc-feat{font-size:11px;color:var(--muted);padding:6px 10px;background:var(--bg2);border:1px solid var(--border2);border-radius:4px;display:flex;align-items:center;gap:8px}
+.pc-feat::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* Stack */
+.stack-grid{display:flex;flex-wrap:wrap;gap:8px}
+.stack-chip{display:flex;align-items:center;gap:8px;padding:8px 14px;border:1px solid var(--border);border-radius:5px;background:var(--bg2);font-size:12px;color:var(--muted);cursor:default;transition:all .2s}
+.stack-chip:hover{border-color:var(--green-border);color:var(--text);background:var(--bg3)}
+.stack-chip svg{width:14px;height:14px;fill:currentColor;flex-shrink:0}
+.stack-chip:hover svg{color:var(--green)}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.stats-img{width:100%;border-radius:8px;border:1px solid var(--border2)}
+
+/* Connect */
+.connect-row{display:flex;gap:12px;flex-wrap:wrap}
+.connect-btn{display:inline-flex;align-items:center;gap:10px;padding:10px 20px;border:1px solid var(--border);border-radius:6px;background:var(--bg2);color:var(--muted);text-decoration:none;font-size:12px;letter-spacing:.06em;transition:all .2s}
+.connect-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-bg)}
+.connect-btn svg{width:16px;height:16px;fill:currentColor}
+
+/* Footer */
+footer{text-align:center;padding:3rem 2rem;border-top:1px solid var(--border2);color:var(--dim);font-size:11px;letter-spacing:.08em}
+
+/* Animations */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+@keyframes arrow-pulse{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes fade-up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Typing cursor */
+.cursor{display:inline-block;width:2px;height:1em;background:var(--green);vertical-align:text-bottom;animation:pulse .8s infinite}
+
+/* Terminal scan line effect */
+.hero::before{content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px);pointer-events:none;z-index:0}
+.hero>*{position:relative;z-index:1}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#"><span>Loki</span>th</a>
+  <div class="nav-links">
+    <a href="#focus">Focus</a>
+    <a href="#projects">Projects</a>
+    <a href="#stack">Stack</a>
+    <a href="#connect">Connect</a>
+  </div>
+  <div class="nav-dot"></div>
+</nav>
+
+<div class="hero">
+  <div class="hero-prompt" id="typed-prompt"></div>
+  <h1 class="hero-name">Loki<span>th</span></h1>
+  <div class="hero-roles">
+    <span class="role-tag">SOC ANALYST</span>
+    <span class="role-tag">THREAT DETECTION</span>
+    <span class="role-tag">SIEM ENGINEERING</span>
+    <span class="role-tag">SYSMON</span>
+    <span class="role-tag">BLUE TEAM</span>
+  </div>
+  <p class="hero-bio">
+    Cybersecurity-focused CS student engineering <strong>practical blue-team systems</strong> — not demos.<br/>
+    Building detection infrastructure grounded in <strong>SOC operations</strong>, telemetry pipelines,<br/>
+    and real attack scenarios that stress-test analyst workflows.
+  </p>
+  <div class="status-pill">
+    <div class="status-dot"></div>
+    actively building · mini siem &amp; threat hunting lab
+  </div>
+  <div class="hero-scroll">
+    <span>scroll</span>
+    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+  </div>
+</div>
+
+<section id="focus" class="reveal">
+  <div class="section-label">// core focus areas</div>
+  <div class="focus-grid">
+    <div class="focus-card">
+      <div class="fc-icon">◈</div>
+      <div class="fc-title">SOC Operations</div>
+      <div class="fc-sub">Alert triage &amp; incident workflow</div>
+    </div>
+    <div class="focus-card">
+      <div class="fc-icon">⬡</div>
+      <div class="fc-title">Threat Detection</div>
+      <div class="fc-sub">Detection logic &amp; rule engineering</div>
+    </div>
+    <div class="focus-card">
+      <div class="fc-icon">◎</div>
+      <div class="fc-title">SIEM Engineering</div>
+      <div class="fc-sub">Log pipelines &amp; correlation</div>
+    </div>
+    <div class="focus-card">
+      <div class="fc-icon">◉</div>
+      <div class="fc-title">Sysmon Telemetry</div>
+      <div class="fc-sub">Windows event log analysis</div>
+    </div>
+    <div class="focus-card">
+      <div class="fc-icon">⬢</div>
+      <div class="fc-title">Threat Hunting</div>
+      <div class="fc-sub">Proactive adversary discovery</div>
+    </div>
+    <div class="focus-card">
+      <div class="fc-icon">◇</div>
+      <div class="fc-title">Python Automation</div>
+      <div class="fc-sub">Security ops tooling</div>
+    </div>
+    <div class="focus-card">
+      <div class="fc-icon">◈</div>
+      <div class="fc-title">Incident Investigation</div>
+      <div class="fc-sub">Correlation &amp; triage flows</div>
+    </div>
+    <div class="focus-card">
+      <div class="fc-icon">◎</div>
+      <div class="fc-title">Detection Logic</div>
+      <div class="fc-sub">Alert engineering &amp; rule tuning</div>
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="section-label">// philosophy</div>
+  <div class="philosophy-terminal">
+    <div class="pt-header">
+      <div class="pt-dots">
+        <div class="pt-dot" style="background:#FF5F57"></div>
+        <div class="pt-dot" style="background:#FFBD2E"></div>
+        <div class="pt-dot" style="background:#1D9E75"></div>
+      </div>
+      <div class="pt-title">~/soc-analyst $ cat philosophy.txt</div>
+      <div></div>
+    </div>
+    <div class="pt-body">
+      <div>
+        <div class="pt-col-label">WHAT I SKIP</div>
+        <div class="pt-col-items">
+          <div class="pt-item skip">flashy UI demos</div>
+          <div class="pt-item skip">surface-level detection</div>
+          <div class="pt-item skip">synthetic lab data</div>
+          <div class="pt-item skip">fragile pipelines</div>
+        </div>
+      </div>
+      <div class="pt-divider">
+        <div class="pt-arrow">→</div>
+        <div class="pt-arrow">→</div>
+        <div class="pt-arrow">→</div>
+        <div class="pt-arrow">→</div>
+      </div>
+      <div>
+        <div class="pt-col-label">WHAT I BUILD TOWARD</div>
+        <div class="pt-col-items">
+          <div class="pt-item build">detection quality</div>
+          <div class="pt-item build">realistic attack scenarios</div>
+          <div class="pt-item build">backend reliability</div>
+          <div class="pt-item build">analyst workflow visibility</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="projects" class="reveal">
+  <div class="section-label">// featured projects</div>
+
+  <div class="project-card" id="proj1">
+    <div class="pc-head" onclick="toggleProject('proj1')">
+      <div class="pc-head-left">
+        <div class="pc-accent"></div>
+        <span class="pc-name">SentinelTrace</span>
+        <div class="pc-tags">
+          <span class="pc-tag green">flagship</span>
+          <span class="pc-tag green">active</span>
+        </div>
+      </div>
+      <div class="pc-chevron open" id="proj1-chev">&#8964;</div>
+    </div>
+    <div class="pc-body open" id="proj1-body">
+      <div class="pc-inner">
+        <div class="pc-desc">SOC-grade security platform built around a Sysmon telemetry pipeline. Designed for analyst workflows — not presentations.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Sysmon telemetry ingestion pipeline</div>
+          <div class="pc-feat">Brute-force &amp; lateral movement detection</div>
+          <div class="pc-feat">Incident dossier auto-generation</div>
+          <div class="pc-feat">Detection correlation engine</div>
+          <div class="pc-feat">Flask-based SOC analyst dashboard</div>
+          <div class="pc-feat">Threat hunting query workflows</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-card" id="proj2">
+    <div class="pc-head" onclick="toggleProject('proj2')">
+      <div class="pc-head-left">
+        <div class="pc-accent amber"></div>
+        <span class="pc-name">Sysmon Detection Engine</span>
+        <div class="pc-tags">
+          <span class="pc-tag amber">detection engine</span>
+        </div>
+      </div>
+      <div class="pc-chevron" id="proj2-chev">&#8964;</div>
+    </div>
+    <div class="pc-body" id="proj2-body">
+      <div class="pc-inner">
+        <div class="pc-desc">Backend-focused detection system for deep Windows telemetry analysis. Built for real events, not toy data.</div>
+        <div class="pc-features">
+          <div class="pc-feat">Windows event log parsing &amp; normalization</div>
+          <div class="pc-feat">Suspicious activity flagging</div>
+          <div class="pc-feat">Rule correlation framework</div>
+          <div class="pc-feat">Telemetry pipeline architecture</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack" class="reveal">
+  <div class="section-label">// tech stack</div>
+  <div class="stack-grid">
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+      Python
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+      PowerShell
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+      Bash
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 18a8 8 0 110-16 8 8 0 010 16zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>
+      Flask
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M12 3C7.58 3 4 5.69 4 9c0 2.04 1.41 3.86 3.57 5L7 17l4-2h1c4.42 0 8-2.69 8-6s-3.58-6-8-6z"/></svg>
+      MySQL
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/></svg>
+      Splunk
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+      Sysmon
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 14H5V6h14v12z"/></svg>
+      Windows Event Logs
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      Detection Engineering
+    </div>
+    <div class="stack-chip">
+      <svg viewBox="0 0 24 24"><path d="M12 2l-5.5 9h11z M17.5 21a4.5 4.5 0 100-9 4.5 4.5 0 000 9z M3 13.5h8v8H3z"/></svg>
+      Incident Response
+    </div>
+  </div>
+</section>
+
+<section class="reveal">
+  <div class="section-label">// github stats</div>
+  <div class="stats-grid">
+    <img class="stats-img" src="https://github-readme-stats.vercel.app/api?username=lokilokith&theme=github_dark_dimmed&hide_border=true&show_icons=true&icon_color=1D9E75&title_color=1D9E75&bg_color=161b22" alt="GitHub Stats"/>
+    <img class="stats-img" src="https://github-readme-stats.vercel.app/api/top-langs/?username=lokilokith&theme=github_dark_dimmed&hide_border=true&layout=compact&title_color=1D9E75&bg_color=161b22" alt="Top Languages"/>
+  </div>
+</section>
+
+<section id="connect" class="reveal">
+  <div class="section-label">// connect</div>
+  <div class="connect-row">
+    <a class="connect-btn" href="https://www.linkedin.com/in/lokith-a8288a30a/" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      LinkedIn
+    </a>
+    <a class="connect-btn" href="mailto:lokilokith123@gmail.com">
+      <svg viewBox="0 0 24 24"><path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 010 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z"/></svg>
+      lokilokith123@gmail.com
+    </a>
+  </div>
+</section>
+
+<footer>
+  <span style="color:var(--green)">Lokith</span> · SOC Analyst · Built with detection precision, not just pixels
+  <br/><br/>
+  <img src="https://komarev.com/ghpvc/?username=lokilokith&style=flat-square&color=1D9E75" alt="Profile views"/>
+</footer>
+
+<script>
+// Typing effect
+const prompt = document.getElementById('typed-prompt');
+const text = '~/soc-analyst $ whoami';
+let i = 0;
+function type() {
+  if (i < text.length) {
+    prompt.textContent = text.slice(0, ++i);
+    setTimeout(type, 60 + Math.random() * 40);
+  } else {
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    prompt.appendChild(cursor);
+  }
+}
+setTimeout(type, 500);
+
+// Project accordion
+function toggleProject(id) {
+  const body = document.getElementById(id + '-body');
+  const chev = document.getElementById(id + '-chev');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chev.classList.toggle('open', !isOpen);
+}
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Active nav link highlight
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current ? '#1D9E75' : '';
+  });
+});
+</script>
+</body>
+</html>
